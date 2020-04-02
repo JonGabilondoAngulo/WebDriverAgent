@@ -20,6 +20,7 @@
 #import "FBXPath.h"
 #import "FBXCTestDaemonsProxy.h"
 #import "FBXCAXClientProxy.h"
+#import "FBElementUtils.h"
 #import "XCAccessibilityElement.h"
 #import "XCElementSnapshot+FBHelpers.h"
 #import "XCUIDevice+FBHelpers.h"
@@ -144,6 +145,16 @@ static NSString* const FBUnknownBundleId = @"unknown";
 #if TARGET_OS_TV
   info[@"isFocused"] = [@([snapshot isWDFocused]) stringValue];
 #endif
+
+  info[@"visibleRect"] = FBwdRectNoInf(@{ @"x": @(CGRectGetMinX(snapshot.visibleFrame)),  @"y": @(CGRectGetMinY(snapshot.visibleFrame)), @"width": @(CGRectGetWidth(snapshot.visibleFrame)), @"height": @(CGRectGetHeight(snapshot.visibleFrame))});
+  NSString *auid = [FBElementUtils uidWithAccessibilityElement:snapshot.accessibilityElement];
+  if (auid) {
+    info[@"accessibilityUID"] = auid;
+  }
+  NSString *aid = [FBElementUtils idWithAccessibilityElement:snapshot.accessibilityElement];
+  if (aid) {
+    info[@"accessibilityID"] = aid;
+  }
 
   if (!recursive) {
     return info.copy;

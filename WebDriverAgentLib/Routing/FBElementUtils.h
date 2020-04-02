@@ -54,6 +54,7 @@ extern NSString *const FBUnknownAttributeException;
  @return the unique element identifier or nil if it cannot be retrieved
  */
 + (nullable NSString *)uidWithAccessibilityElement:(XCAccessibilityElement *)element;
++ (nullable NSString *)idWithAccessibilityElement:(XCAccessibilityElement *)element;
 
 @end
 

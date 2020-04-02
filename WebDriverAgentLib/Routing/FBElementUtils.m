@@ -133,4 +133,23 @@ static dispatch_once_t oncePayloadToken;
   return uuidValue.UUIDString;
 }
 
++ (NSString *)idWithAccessibilityElement:(XCAccessibilityElement *)element
+{
+  dispatch_once(&oncePayloadToken, ^{
+    FBShouldUsePayloadForUIDExtraction = [element respondsToSelector:@selector(payload)];
+  });
+  unsigned long long elementId;
+  if (FBShouldUsePayloadForUIDExtraction) {
+    elementId = [[element.payload objectForKey:@"uid.elementID"] longLongValue];
+  } else {
+    elementId = [[element valueForKey:@"_elementID"] longLongValue];
+  }
+  int processId = element.processIdentifier;
+  if (elementId < 1 || processId < 1) {
+    return nil;
+  }
+  return [NSString stringWithFormat:@"%llu", elementId];
+}
+
+
 @end
